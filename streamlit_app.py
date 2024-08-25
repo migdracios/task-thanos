@@ -72,9 +72,13 @@ with st.form("my_form"):
             if st.form_submit_button("프로젝트 확정하기", type="primary"):
                 st.success('프로젝트 생성 완료!', icon="✅")
             
-
-
-
         
 # 페이지 네비게이션
-pg = st.navigation([st.Page("page_coworkers.py"), st.Page("page_dashboard.py")])
+st.set_page_config(page_title="Data manager", page_icon=":material/edit:")
+
+coworkers_page = st.Page("page_coworkers.py", title="Manage Coworkers", icon=":material/diversity_3:")
+dashboard_page = st.Page("page_dashboard.py", title="Task Dashboard", icon=":material/dashboard:")
+
+pg = st.navigation([coworkers_page, dashboard_page])
+
+pg.run()

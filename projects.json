@@ -1,0 +1,114 @@
+[
+  {
+    "id": "f8080da9-637f-492a-a8c3-1f5a3da15a2d",
+    "name": "취준생을 위한 원데이 클래스 2차(240828)",
+    "deadline": "2024-08-28",
+    "created_at": "2024-08-25 20:32:36.708858",
+    "task_days": {
+      "design": 0,
+      "recruit": 0,
+      "confirm_course": 0,
+      "code_source": 0,
+      "write_notion": 0,
+      "record": 0,
+      "edit": 0,
+      "backoffice": 0,
+      "non_bau": 0,
+      "communication": 0,
+      "team_automation": 0,
+      "crm_message": 1,
+      "live_course": 1,
+      "make_landing": 0
+    },
+    "team_members": [
+      "조형규",
+      "이다희",
+      "최지웅",
+      "이지연"
+    ],
+    "total_planned_days": 2,
+    "available_days": 3,
+    "tasks": [
+      {
+        "id": "3cc7ce35-8168-4ced-b2a0-046eaf91b699",
+        "name": "crm_message",
+        "start_date": "2024-08-25",
+        "end_date": "2024-08-26",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "31a31d38-db82-457f-a48a-26add9c6d133",
+        "name": "Share crm_message status with 조형규",
+        "start_date": "2024-08-25",
+        "end_date": "2024-08-26",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "22d3be8e-8943-4eeb-b9fb-d3240c325d37",
+        "name": "Share crm_message status with 이다희",
+        "start_date": "2024-08-25",
+        "end_date": "2024-08-26",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "17466f1f-7e9a-46a6-81d7-ae4e1aec4b4a",
+        "name": "Share crm_message status with 최지웅",
+        "start_date": "2024-08-25",
+        "end_date": "2024-08-26",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "1fc263f7-36d3-4837-b520-de402130f0c5",
+        "name": "Share crm_message status with 이지연",
+        "start_date": "2024-08-25",
+        "end_date": "2024-08-26",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "c8ce7fce-f837-4187-974f-c9361ab7856e",
+        "name": "live_course",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "24d204ec-9c23-42af-b3ac-25654a173e4b",
+        "name": "Share live_course status with 조형규",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "0404e608-bb02-4eb7-a411-92017becddbc",
+        "name": "Share live_course status with 이다희",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "ea7e22ff-c5ba-4e49-af09-2e351dfc21cd",
+        "name": "Share live_course status with 최지웅",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "ca14b03b-6c2c-4950-a92f-c7a4dbc2c920",
+        "name": "Share live_course status with 이지연",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      }
+    ]
+  }
+]

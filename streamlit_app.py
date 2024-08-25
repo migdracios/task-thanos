@@ -119,6 +119,33 @@ def add_custom_task(project, task_name, task_days, start_date):
     # 프로젝트의 total_planned_days 업데이트
     project['total_planned_days'] += task_days
 
+def delete_task(project, task_id):
+    project['tasks'] = [task for task in project['tasks'] if task['id'] != task_id]
+    # 관련된 공유 태스크도 삭제
+    project['tasks'] = [task for task in project['tasks'] if not task['name'].startswith(f"Share {task_id}")]
+    # 프로젝트의 total_planned_days 업데이트
+    project['total_planned_days'] = sum(task['duration'] for task in project['tasks'] if not task['name'].startswith("Share"))
+
+def edit_task(project, task_id, new_name, new_days, new_start_date):
+    for task in project['tasks']:
+        if task['id'] == task_id:
+            old_duration = task['duration']
+            task['name'] = new_name
+            task['duration'] = new_days
+            task['start_date'] = str(new_start_date)
+            task['end_date'] = str(calculate_workdays(new_start_date, new_days))
+            
+            # 관련된 공유 태스크도 업데이트
+            for share_task in project['tasks']:
+                if share_task['name'].startswith(f"Share {task['name']} status with"):
+                    share_task['duration'] = new_days
+                    share_task['start_date'] = task['start_date']
+                    share_task['end_date'] = task['end_date']
+            
+            # 프로젝트의 total_planned_days 업데이트
+            project['total_planned_days'] += (new_days - old_duration)
+            break
+
 ### 함수 끝 <<<<<
 
 ### >>> 데이터 획득/관리
@@ -252,16 +279,21 @@ for i, project in enumerate(projects):
         st.progress(int(progress))
         st.write(f"프로젝트 진행률: {progress:.2f}%")
         
-        # 프로젝트 완료 및 아카이브, 커스텀 태스크 추가
-        col1, col2, col3 = st.columns(3)
+        # 프로젝트 완료, 진행중 및 아카이브, 커스텀 태스크 추가
+        col1, col2, col3, col4 = st.columns(4)
         with col1:
-            if st.button("프로젝트 완료", key=f"complete_{project['id']}"):
+            if st.button("완료", key=f"complete_{project['id']}"):
                 project['completed'] = True
                 save_projects(projects)
                 st.success("프로젝트가 완료되었습니다!")
                 st.rerun()
         with col2:
-            if st.button("프로젝트 아카이브", key=f"archive_{project['id']}"):
+            if st.button("다시 진행", key=f"inprogress_{project['id']}"):
+                project['completed'] = False
+                save_projects(projects)
+                st.rerun()
+        with col3:
+            if st.button("아카이브", key=f"archive_{project['id']}"):
                 archived_projects = load_archived_projects()
                 archived_projects.append(project)
                 save_archived_projects(archived_projects)
@@ -269,8 +301,8 @@ for i, project in enumerate(projects):
                 save_projects(projects)
                 st.success("프로젝트가 아카이브되었습니다.")
                 st.rerun()
-        with col3:
-            if st.button("커스텀 태스크 추가", key=f"add_task_{project['id']}"):
+        with col4:
+            if st.button("커스텀 태스크", key=f"add_task_{project['id']}"):
                 st.session_state[f"show_task_form_{project['id']}"] = True
 
         # 커스텀 태스크 추가 폼
@@ -307,7 +339,7 @@ for i, project in enumerate(projects):
         share_tasks = [task for task in project['tasks'] if task['name'].startswith("Share")]
         
         for task in work_tasks:
-            col1, col2, col3, col4 = st.columns([2, 3, 2, 1])
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 4, 2, 1, 1, 1])
             with col1:
                 st.write(f"**{task['name']}**")
             with col2:
@@ -321,16 +353,45 @@ for i, project in enumerate(projects):
                     key=f"{project['id']}_{task['id']}",
                     label_visibility="collapsed"
                 )
+            with col5:
+                if st.button("💬", key=f"edit_{task['id']}"):
+                    st.session_state[f"edit_task_{task['id']}"] = True
+            with col6:
+                if st.button("❌", key=f"delete_{task['id']}"):
+                    delete_task(project, task['id'])
+                    save_projects(projects)
+                    st.success("태스크가 삭제되었습니다.")
+                    st.rerun()
+            
+           # 태스크 수정 폼
+            if st.session_state.get(f"edit_task_{task['id']}", False):
+                st.write("태스크 수정")
+                new_name = st.text_input("태스크 이름", value=task['name'], key=f"new_name_{task['id']}")
+                new_days = st.number_input("사용 리소스 일자", min_value=1, value=task['duration'], key=f"new_days_{task['id']}")
+                new_start_date = st.date_input("업무 시작일", value=datetime.strptime(task['start_date'], "%Y-%m-%d").date(), key=f"new_start_date_{task['id']}")
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("수정 완료", key=f"confirm_edit_{task['id']}"):
+                        edit_task(project, task['id'], new_name, new_days, new_start_date)
+                        save_projects(projects)
+                        st.success("태스크가 수정되었습니다.")
+                        st.session_state[f"edit_task_{task['id']}"] = False
+                        st.rerun()
+                with col2:
+                    if st.button("취소", key=f"cancel_edit_{task['id']}"):
+                        st.session_state[f"edit_task_{task['id']}"] = False
+                        st.rerun()
         
         st.write(":blue[업무 공유]")
         for task in share_tasks:
-            col1, col2, col3, col4 = st.columns([2, 3, 2, 1])
+            col1, col2, col3, col4, col5, col6 = st.columns([3, 4, 2, 1, 1, 1])
             with col1:
                 st.write(f"**{task['name']}**")
             with col2:
                 st.write(f"공유 일자 : {task['end_date']}")
             with col3:
-                st.write(f"당일 업무 종료 이후 1시간 이내")
+                st.write(f"1시간 이내")
             with col4:
                 task['completed'] = st.checkbox(
                     label=f"완료 - {task['name']}",
@@ -338,6 +399,15 @@ for i, project in enumerate(projects):
                     key=f"{project['id']}_{task['id']}",
                     label_visibility="collapsed"
                 )
+            with col5:
+                if st.button("💬", key=f"edit_{task['id']}"):
+                    st.session_state[f"edit_task_{task['id']}"] = True
+            with col6:
+                if st.button("❌", key=f"delete_{task['id']}"):
+                    delete_task(project, task['id'])
+                    save_projects(projects)
+                    st.success("태스크가 삭제되었습니다.")
+                    st.rerun()
         
         # 프로젝트 업데이트 (태스크 완료 상태 변경 시)
         if st.button("프로젝트 업데이트", key=f"update_{project['id']}"):

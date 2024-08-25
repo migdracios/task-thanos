@@ -26,7 +26,7 @@
       "최지웅",
       "이지연"
     ],
-    "total_planned_days": 2,
+    "total_planned_days": 3,
     "available_days": 3,
     "tasks": [
       {
@@ -108,7 +108,48 @@
         "end_date": "2024-08-27",
         "duration": 1,
         "completed": false
+      },
+      {
+        "id": "8f185af8-abd5-4b43-9383-091183eff41a",
+        "name": "D-1 CRM 발송",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "3fcde343-f3b3-41bd-823e-46042317e085",
+        "name": "Share D-1 CRM 발송 status with 조형규",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "add374e0-c4ed-4839-85f6-fc21d3c0e61a",
+        "name": "Share D-1 CRM 발송 status with 이다희",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "a18712ed-69b5-4448-b7ab-7aef386f25aa",
+        "name": "Share D-1 CRM 발송 status with 최지웅",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
+      },
+      {
+        "id": "2fbe7aaa-4940-4110-8f24-7e56e2882bc3",
+        "name": "Share D-1 CRM 발송 status with 이지연",
+        "start_date": "2024-08-27",
+        "end_date": "2024-08-27",
+        "duration": 1,
+        "completed": false
       }
-    ]
+    ],
+    "completed": true
   }
 ]

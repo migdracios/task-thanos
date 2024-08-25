@@ -91,6 +91,33 @@ def load_archived_projects():
 def save_archived_projects(projects):
     with open("archived_projects.json", "w", encoding="utf-8") as file:
         json.dump(projects, file, ensure_ascii=False, indent=2)
+        
+def add_custom_task(project, task_name, task_days, start_date):
+    end_date = calculate_workdays(start_date, task_days)
+    new_task = {
+        "id": str(uuid.uuid4()),
+        "name": task_name,
+        "start_date": str(start_date),
+        "end_date": str(end_date),
+        "duration": task_days,
+        "completed": False
+    }
+    project['tasks'].append(new_task)
+    
+    # 공유 태스크 생성
+    for member in project['team_members']:
+        share_task = {
+            "id": str(uuid.uuid4()),
+            "name": f"Share {task_name} status with {member}",
+            "start_date": str(start_date),
+            "end_date": str(end_date),
+            "duration": task_days,
+            "completed": False
+        }
+        project['tasks'].append(share_task)
+    
+    # 프로젝트의 total_planned_days 업데이트
+    project['total_planned_days'] += task_days
 
 ### 함수 끝 <<<<<
 
@@ -225,8 +252,8 @@ for i, project in enumerate(projects):
         st.progress(int(progress))
         st.write(f"프로젝트 진행률: {progress:.2f}%")
         
-        # 프로젝트 완료 및 아카이브 버튼
-        col1, col2 = st.columns(2)
+        # 프로젝트 완료 및 아카이브, 커스텀 태스크 추가
+        col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("프로젝트 완료", key=f"complete_{project['id']}"):
                 project['completed'] = True
@@ -242,6 +269,35 @@ for i, project in enumerate(projects):
                 save_projects(projects)
                 st.success("프로젝트가 아카이브되었습니다.")
                 st.rerun()
+        with col3:
+            if st.button("커스텀 태스크 추가", key=f"add_task_{project['id']}"):
+                st.session_state[f"show_task_form_{project['id']}"] = True
+
+        # 커스텀 태스크 추가 폼
+        if st.session_state.get(f"show_task_form_{project['id']}", False):
+            st.write("새 태스크 추가")
+            task_name = st.text_input("태스크 이름", key=f"task_name_{project['id']}")
+            task_days = st.number_input("사용 리소스 일자", min_value=1, value=1, key=f"task_days_{project['id']}")
+            start_date = st.date_input("업무 시작일", value=datetime.now().date(), key=f"start_date_{project['id']}")
+            
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if st.button("리소스 계산", key=f"calculate_resource_{project['id']}"):
+                    end_date = calculate_workdays(start_date, task_days)
+                    st.write(f"예상 종료일: {end_date}")
+                    st.write(f"총 계획 일수: {project['total_planned_days'] + task_days} 일")
+            
+            with col2:
+                if st.button("태스크 추가하기", key=f"add_task_confirm_{project['id']}"):
+                    add_custom_task(project, task_name, task_days, start_date)
+                    save_projects(projects)
+                    st.success("새 태스크가 추가되었습니다!")
+                    st.session_state[f"show_task_form_{project['id']}"] = False
+                    st.rerun()
+            with col3:
+                if st.button("취소", key=f"cancel_add_task_{project['id']}"):
+                    st.session_state[f"show_task_form_{project['id']}"] = False
+                    st.rerun()
         
         # 태스크 목록 표시 및 관리
         st.write(":blue[TASKS]")

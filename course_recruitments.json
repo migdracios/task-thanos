@@ -1,0 +1,30 @@
+[
+    {
+        "course_name": "test",
+        "duration": "5주차, 주차별 2시간",
+        "additional_pay": "5만원(강의력 이슈)",
+        "editing_schedule": "08-27~09-09",
+        "review_schedule": "09-01~09-09",
+        "roles_needed": [
+            "편집자",
+            "검수자"
+        ],
+        "created_at": "2024-08-27 18:49:57",
+        "applicants": [
+            "황영상"
+        ]
+    },
+    {
+        "course_name": "test",
+        "duration": "5주차, 주차별 2시간",
+        "additional_pay": "5만원(강의력 이슈)",
+        "editing_schedule": "08-27~09-09",
+        "review_schedule": "09-01~09-09",
+        "roles_needed": [
+            "편집자",
+            "검수자"
+        ],
+        "created_at": "2024-08-27 18:50:03",
+        "applicants": []
+    }
+]

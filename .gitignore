@@ -2,6 +2,10 @@
 __pycache__/
 *.py[cod]
 *$py.class
+venv
+venv/
+project.json
+team_members.json
 
 # C extensions
 *.so
